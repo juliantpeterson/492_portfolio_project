@@ -1,0 +1,2346 @@
+{
+	"info": {
+		"_postman_id": "c11043bf-ba3d-4472-944e-d235c5b121e8",
+		"name": "peterju4_project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30104630"
+	},
+	"item": [
+		{
+			"name": "create restaurant 201 (owner1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_id\", pm.response.json()[\"id\"]);",
+							"pm.environment.set(\"name\", pm.response.json()[\"name\"]);",
+							"pm.environment.set(\"cost\", pm.response.json()[\"cost\"]);",
+							"pm.environment.set(\"cuisine\", pm.response.json()[\"cuisine\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Ivan's\");",
+							"    pm.expect(pm.response.json()[\"cost\"]).to.eq(\"$$$\");",
+							"    pm.expect(pm.response.json()[\"cuisine\"]).to.eq(\"Italian\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ivan's\",\n    \"cost\": \"$$$\",\n    \"cuisine\": \"Italian\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 400 - missing attribute (owner1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"The request object is missing at least one of the required attributes\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ivan's\",\n    \"cost\": \"$$$\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 401 - missing authorization",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"Missing token\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"ivan's\",\n    \"cost\": \"$$$\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 400 - extraneous attribute",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"The request object includes extraneous attributes\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ivan's\",\n    \"cost\": \"$$$\",\n    \"cuisine\": \"Italian\",\n    \"location\": \"Seattle\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 400 - wrong cost value (owner 1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"400 status code\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"The ‘cost’ value must equal $, $$, $$$, or $$$$\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ivan's\",\n    \"cost\": \"$$$$$\",\n    \"cuisine\": \"Italian\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"return content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(pm.environment.get(\"name\"));",
+							"    pm.expect(pm.response.json()[\"cost\"]).to.eq(pm.environment.get(\"cost\"));",
+							"    pm.expect(pm.response.json()[\"cuisine\"]).to.eq(pm.environment.get(\"cuisine\"));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 401 - missing token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"401 status code\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"Missing token\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 403 - wrong token for protected entity",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							"",
+							"pm.test(\"403 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"You are not authorized to view this restaurant\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put restaurant 204",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"New name restaurant\",\n    \"cost\": \"$\",\n    \"cuisine\": \"Italian-Fusion\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 200 - updated info",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"return content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"New name restaurant\");",
+							"    pm.expect(pm.response.json()[\"cost\"]).to.eq(\"$\");",
+							"    pm.expect(pm.response.json()[\"cuisine\"]).to.eq(\"Italian-Fusion\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 2 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_2_id\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Indulge\",\n    \"cost\": \"$$$$\",\n    \"cuisine\": \"Thai\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "patch restaurant 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"cost\": \"$$\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_2_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 200 - updated info Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"return content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"cost\"]).to.eq(\"$$\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_2_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_2_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 3 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_3_id\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"WhistlePig\",\n    \"cost\": \"$$\",\n    \"cuisine\": \"BBQ\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 4 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_4_id\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Pure\",\n    \"cost\": \"$$\",\n    \"cuisine\": \"Smoothies\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 5 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_5_id\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Rafael's\",\n    \"cost\": \"$$\",\n    \"cuisine\": \"Pacific Northwest\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant 6 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_6_id\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Smack!\",\n    \"cost\": \"$\",\n    \"cuisine\": \"Ramen\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all restaurants 200 (owner1)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"At least one restaurant exists\", function(){",
+							"   pm.expect(Object.keys(pm.response.json()).length).to.be.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all restaurants 200 (owner2)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"At least one restaurant exists\", function(){",
+							"   pm.expect(Object.keys(pm.response.json()).length).to.be.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"404 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"No restaurant with this restaurant_id exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{invalid_restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{invalid_restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete restaurant 404 - invalid restaurant id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"400 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"No restaurant with this restaurant_id exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{invalid_restaurant_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{invalid_restaurant_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create restaurant to delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"restaurant_id_to_delete\", pm.response.json()[\"id\"]);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Destined for failure\",\n    \"cost\": \"$$$$\",\n    \"cuisine\": \"bad\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete restaurant 403 - wrong token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id_to_delete}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id_to_delete}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "patch restaurant 403 - wrong token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"403 status code\", function () {",
+							"    pm.response.to.have.status(403);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt1}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"cost\": \"$\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id_to_delete}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id_to_delete}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete restaurant 204",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id_to_delete}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id_to_delete}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete restaurant 404 -restaurant already deleted",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_id_to_delete}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_id_to_delete}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 1 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_1_id\", pm.response.json()[\"id\"]);",
+							"pm.environment.set(\"name\", pm.response.json()[\"name\"]);",
+							"pm.environment.set(\"position\", pm.response.json()[\"position\"]);",
+							"pm.environment.set(\"wage\", pm.response.json()[\"wage\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"content is valid\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Carlos Cruz\");",
+							"    pm.expect(pm.response.json()[\"wage\"]).to.eq(15.20);",
+							"    pm.expect(pm.response.json()[\"position\"]).to.eq(\"Line Cook\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Carlos Cruz\",\n    \"wage\": 15.20,\n    \"position\": \"Line Cook\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 2 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_2_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Chad Davis\",\n    \"wage\": 20.20,\n    \"position\": \"General Manager\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 3 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_3_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Tim Reilly\",\n    \"wage\": 19.20,\n    \"position\": \"Bartender\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 4 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_4_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Ryan Vogt\",\n    \"wage\": 15.20,\n    \"position\": \"Server\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 5 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_5_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Andrew Harville\",\n    \"wage\": 19.20,\n    \"position\": \"Chef\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create employee 6 201",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"employee_6_id\", pm.response.json()[\"id\"]);",
+							"",
+							"pm.test(\"201 status code\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Nikki Stewart\",\n    \"wage\": 16.20,\n    \"position\": \"Bartender\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant hires Andrew",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_3_id}}/employees/{{employee_5_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_3_id}}",
+						"employees",
+						"{{employee_5_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant hires Carlos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_3_id}}/employees/{{employee_1_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_3_id}}",
+						"employees",
+						"{{employee_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant 200 - updated employees",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"2 employees\", function () {",
+							"    pm.expect(pm.response.json()[\"employees\"]).to.be.length(2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_3_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_3_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all employees 200",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"correct employee count\", function () {",
+							"    pm.expect(pm.response.json()[\"count\"]).to.eq(6);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"workplace is correct\", function () {",
+							"    pm.expect(pm.response.json()[\"workplace\"][\"id\"]).to.eq(pm.environment.get(\"restaurant_3_id\"));",
+							"    pm.expect(pm.response.json()[\"workplace\"][\"name\"]).to.eq(\"WhistlePig\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_5_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_5_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant fires Andrew",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_3_id}}/employees/{{employee_5_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_3_id}}",
+						"employees",
+						"{{employee_5_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee after fired",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"workplace is correct - null\", function () {",
+							"    pm.expect(pm.response.json()[\"workplace\"]).to.eq(null);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_5_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_5_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get restaurant after fired",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"1 employees\", function () {",
+							"    pm.expect(pm.response.json()[\"employees\"]).to.be.length(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/restaurants/{{restaurant_3_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"{{restaurant_3_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "put employee - promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Carlos Fletes\",\n    \"position\": \"Chef\",\n    \"wage\": 25.40\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_1_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee after promotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"workplace is correct\", function () {",
+							"    pm.expect(pm.response.json()[\"workplace\"][\"id\"]).to.eq(pm.environment.get(\"restaurant_3_id\"));",
+							"    pm.expect(pm.response.json()[\"workplace\"][\"name\"]).to.eq(\"WhistlePig\");",
+							"});",
+							"",
+							"pm.test(\"updated employee information is correct\", function () {",
+							"    pm.expect(pm.response.json()[\"name\"]).to.eq(\"Carlos Fletes\");",
+							"    pm.expect(pm.response.json()[\"position\"]).to.eq(\"Chef\");",
+							"    pm.expect(pm.response.json()[\"wage\"]).to.eq(25.4);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_1_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_1_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee before demotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\" employee information is correct\", function () {",
+							"    pm.expect(pm.response.json()[\"position\"]).to.eq(\"Server\");",
+							"    pm.expect(pm.response.json()[\"wage\"]).to.eq(15.2);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_4_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_4_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "patch employee - demotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"position\": \"Dishwasher\",\n    \"wage\": 14.40\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_4_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_4_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee after demotion",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\" employee information is correct\", function () {",
+							"    pm.expect(pm.response.json()[\"position\"]).to.eq(\"Dishwasher\");",
+							"    pm.expect(pm.response.json()[\"wage\"]).to.eq(14.4);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_4_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_4_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete employee",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"204 status code\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_4_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_4_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all employees after delete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"correct employee count\", function () {",
+							"    pm.expect(pm.response.json()[\"count\"]).to.eq(5);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee after deleted 404",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"404 status code\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test(\"404 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"No employee with this employee_id exists\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_4_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_4_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get employee 406 accept html",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"406 status code\", function () {",
+							"    pm.response.to.have.status(406);",
+							"});",
+							"",
+							"pm.test(\"406 error message\", function () {",
+							"     pm.expect(pm.response.json()[\"Error\"]).to.eq(\"This endpoint only supports the return of JSON objects\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "text/html",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{app_url}}/employees/{{employee_3_id}}",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"{{employee_3_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"200 status code\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"At least one user exists\", function(){",
+							"   pm.expect(Object.keys(pm.response.json()).length).to.be.at.least(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/users",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE ALL RESTAURANTS",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/restaurants/all",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"restaurants",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE ALL EMPLOYEES",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{app_url}}/employees/all",
+					"host": [
+						"{{app_url}}"
+					],
+					"path": [
+						"employees",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
